@@ -2,74 +2,86 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
 {
-    public float m_velocityMove = 10f;
-    public float m_jumpHeight = 4f;
-    public Camera player;
-    public float sensitivity = 100f;
+    /*  public float m_velocityMove = 10f;
+      public float m_jumpHeight = 4f;
+      public Camera player;
+      public float sensitivity = 100f;
 
-    float horizontalRotation = 0f;
-    CharacterController m_controller;
-    bool m_isGrounded;
-    float m_gravity = -9.80665f;
-    Vector3 velocity;
+      float horizontalRotation = 0f;
+      CharacterController m_controller;
+      bool m_isGrounded;
+      float m_gravity = -9.80665f;
+      Vector3 velocity;
+      */
 
+    public float speed = 20;
+    private Vector3 motion;
+    private Rigidbody rb;
+    void onMove(InputValue value)
+    {
+        motion = value.Get<Vector2>();
+    }
     void Start()
     {
-        m_controller = GetComponent<CharacterController>();
+        //   m_controller = GetComponent<CharacterController>();
+        rb = GetComponent<Rigidbody>();
     }
 
     void FixedUpdate()
     {
-        var mouse = Input.mousePresent;
+        //var mouse = Input.mousePresent;
 
-        if (!mouse) Debug.LogWarning("Mouse não conectado");
+        //if (!mouse) Debug.LogWarning("Mouse não conectado");
+        rb.velocity = motion * speed * Time.deltaTime;
     }
-    void Update()
-    {
-        FirstPersonLook();
-        Controller();
-    }
+    /*  void Update()
+     {
+         FirstPersonLook();
+         Controller();
+     }
 
-    void FirstPersonLook()
-    {
-        float mouseHorizontal = Input.GetAxis("Mouse X") * sensitivity * Time.deltaTime;
-        float mouseVertical = Input.GetAxis("Mouse Y") * sensitivity * Time.deltaTime;
+     void FirstPersonLook()
+     {
+         float mouseHorizontal = Input.GetAxis("Mouse X") * sensitivity * Time.deltaTime;
+         float mouseVertical = Input.GetAxis("Mouse Y") * sensitivity * Time.deltaTime;
 
-        horizontalRotation -= mouseVertical;
-        horizontalRotation = Mathf.Clamp(horizontalRotation, -90f, 90f);
+         horizontalRotation -= mouseVertical;
+         horizontalRotation = Mathf.Clamp(horizontalRotation, -90f, 90f);
 
-        player.transform.localRotation = Quaternion.Euler(horizontalRotation, 0f, 0f);
-        transform.Rotate(Vector3.up * mouseHorizontal);
-    }
+         player.transform.localRotation = Quaternion.Euler(horizontalRotation, 0f, 0f);
+         transform.Rotate(Vector3.up * mouseHorizontal);
+     }
 
-    void Controller()
-    {
-        m_isGrounded = m_controller.isGrounded;
-        float verticalSpeed = m_controller.velocity.y;
-        if (m_isGrounded && verticalSpeed < 0)
-        {
-            velocity.y = -2f;
-        }
+     void Controller()
+     {
+         m_isGrounded = m_controller.isGrounded;
+         float verticalSpeed = m_controller.velocity.y;
+         if (m_isGrounded && verticalSpeed < 0)
+         {
+             velocity.y = -2f;
+         }
 
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
-        bool jumped = Input.GetButtonDown("Jump");
+         float horizontal = Input.GetAxis("Horizontal");
+         float vertical = Input.GetAxis("Vertical");
+         bool jumped = Input.GetButtonDown("Jump");
 
-        Vector3 move = (transform.right * horizontal + transform.forward * vertical) * m_velocityMove * Time.deltaTime;
+         Vector3 move = (transform.right * horizontal + transform.forward * vertical) * m_velocityMove * Time.deltaTime;
 
-        m_controller.Move(move);
+         m_controller.Move(move);
 
-        if (jumped && m_isGrounded)
-        {
-            velocity.y = (float)Math.Sqrt(m_jumpHeight * -2f * m_gravity);
-        }
+         if (jumped && m_isGrounded)
+         {
+             velocity.y = (float)Math.Sqrt(m_jumpHeight * -2f * m_gravity);
+         }
 
-        velocity.y += m_gravity * Time.deltaTime;
+         velocity.y += m_gravity * Time.deltaTime;
 
-        m_controller.Move(velocity * Time.deltaTime);
-    }
+         m_controller.Move(velocity * Time.deltaTime);
+     }
+   */
 }
